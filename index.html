@@ -161,59 +161,59 @@ Yemen;Asia;Available
 Zambia;Africa;Available
 Zimbabwe;Africa;Available`;
 
-    const rows = rawCSV.trim().split('\\n');
+    const rows = rawCSV.trim().split('\n');
     const headers = rows[0].split(';');
-    let data = rows.slice(1).map(row => {{
+    let data = rows.slice(1).map(row => {
       const values = row.split(';');
       return Object.fromEntries(headers.map((h, i) => [h, values[i]]));
-    }});
+    });
 
     let currentPage = 1;
     const rowsPerPage = 20;
     let filteredData = [...data];
 
-    function renderTable() {{
+    function renderTable() {
       const start = (currentPage - 1) * rowsPerPage;
       const end = start + rowsPerPage;
       const visibleRows = filteredData.slice(start, end);
       const tbody = document.getElementById("tableBody");
       tbody.innerHTML = "";
-      visibleRows.forEach(row => {{
+      visibleRows.forEach(row => {
         const tr = document.createElement("tr");
-        headers.forEach(h => {{
+        headers.forEach(h => {
           const td = document.createElement("td");
           td.className = "px-6 py-4 whitespace-nowrap text-sm text-gray-900";
           td.textContent = row[h] || "";
           tr.appendChild(td);
-        }});
+        });
         tbody.appendChild(tr);
-      }});
+      });
       document.getElementById("pageInfo").textContent = `Showing ${start + 1} to ${Math.min(end, filteredData.length)} of ${filteredData.length}`;
       document.getElementById("prevBtn").disabled = currentPage === 1;
       document.getElementById("nextBtn").disabled = end >= filteredData.length;
-    }}
+    }
 
-    function handleSearch() {{
+    function handleSearch() {
       const term = document.getElementById("searchInput").value.toLowerCase();
       filteredData = data.filter(row =>
         headers.some(h => row[h] && row[h].toLowerCase().includes(term))
       );
       currentPage = 1;
       renderTable();
-    }}
+    }
 
-    document.getElementById("prevBtn").addEventListener("click", () => {{
-      if (currentPage > 1) {{
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (currentPage > 1) {
         currentPage--;
         renderTable();
-      }}
-    }});
-    document.getElementById("nextBtn").addEventListener("click", () => {{
-      if ((currentPage * rowsPerPage) < filteredData.length) {{
+      }
+    });
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if ((currentPage * rowsPerPage) < filteredData.length) {
         currentPage++;
         renderTable();
-      }}
-    }});
+      }
+    });
     document.getElementById("searchInput").addEventListener("input", handleSearch);
     window.onload = renderTable;
   </script>
